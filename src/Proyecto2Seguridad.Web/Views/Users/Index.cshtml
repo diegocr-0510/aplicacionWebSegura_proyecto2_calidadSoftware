@@ -1,0 +1,73 @@
+@model IEnumerable<Proyecto2Seguridad.Web.ViewModels.UserFormViewModel>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1 class="mb-4">Gestión de usuarios</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear usuario</a>
+</p>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Nombre de usuario</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Último login</th>
+            <th>Permisos</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>
+                    @if (user.LastLoginAt.HasValue)
+                    {
+                        @user.LastLoginAt.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                    }
+                    else
+                    {
+                        <span>No registrado</span>
+                    }
+                </td>
+                <td>
+                    @if (user.Role == "SuperAdmin")
+                    {
+                        <span>Administración total</span>
+                    }
+                    else if (user.Role == "Auditor")
+                    {
+                        <span>Solo lectura</span>
+                    }
+                    else if (user.Role == "Registrador")
+                    {
+                        <span>CRUD de productos / lectura de usuarios</span>
+                    }
+                    else
+                    {
+                        <span>Sin permisos definidos</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
