@@ -1,8 +1,61 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-panel text-center">
+    <h1 class="display-4 fw-bold mb-3">NovaTech Store</h1>
+    <p class="lead mb-4">
+        Sistema web seguro para la consulta y administración de productos tecnológicos.
+    </p>
+    <p class="hero-description">
+        Desde este sistema puedes visualizar productos relacionados con informática,
+        gestionar inventario y trabajar de forma segura con control de acceso por roles.
+    </p>
+
+    <div class="mt-4">
+        <a asp-controller="Products" asp-action="Index" class="btn btn-primary btn-lg me-2">
+            Ver productos
+        </a>
+        <a asp-controller="Home" asp-action="Privacy" class="btn btn-outline-secondary btn-lg">
+            Más información
+        </a>
+    </div>
+</div>
+
+<div class="row mt-5 g-4">
+    <div class="col-md-4">
+        <div class="card h-100 dashboard-card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Catálogo tecnológico</h5>
+                <p class="card-text">
+                    Consulta artículos de informática como periféricos, componentes,
+                    accesorios y otros recursos tecnológicos.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 dashboard-card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Gestión segura</h5>
+                <p class="card-text">
+                    El sistema controla el acceso por roles, protege operaciones sensibles
+                    y permite trabajar con mayor seguridad.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 dashboard-card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Administración centralizada</h5>
+                <p class="card-text">
+                    Toda la información de productos se mantiene organizada en una sola
+                    aplicación web con base de datos relacional.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>

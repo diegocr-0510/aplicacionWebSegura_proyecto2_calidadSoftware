@@ -1,5 +1,7 @@
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,24 +10,91 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
   margin-bottom: 60px;
+  background: linear-gradient(180deg, #f4f7fb 0%, #eef2f7 100%);
+  color: #1f2937;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Navbar principal */
+.novatech-navbar {
+  background: linear-gradient(90deg, #0f172a 0%, #1d4ed8 100%);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* Efecto hover de enlaces del navbar */
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease-in-out;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Panel principal del inicio */
+.hero-panel {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 60px 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* Texto descriptivo del hero */
+.hero-description {
+  max-width: 760px;
+  margin: 0 auto;
+  color: #4b5563;
+  font-size: 1.08rem;
+}
+
+/* Tarjetas del dashboard */
+.dashboard-card {
+  border: none;
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+/* Panel informativo */
+.info-panel {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 40px 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* Footer */
+.footer {
+  background-color: #ffffff;
+}
+
+/* Botones */
+.btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Inputs con mejor apariencia */
+.form-control,
+.form-select,
+textarea {
+  border-radius: 10px;
+}
+
+/* Tablas */
+.table {
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
 }
