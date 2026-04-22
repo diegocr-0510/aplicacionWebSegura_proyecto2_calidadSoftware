@@ -3,22 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Proyecto2Seguridad.Web.Data;
 using Proyecto2Seguridad.Web.Models;
+using Proyecto2Seguridad.Web.Services;
 
 namespace Proyecto2Seguridad.Web.Controllers
 {
-    // Este controlador permite gestionar productos.
-    // Auditor puede ver, pero solo SuperAdmin y Registrador pueden escribir.
     [Authorize(Roles = "SuperAdmin,Registrador,Auditor")]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly AuditService _auditService;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, AuditService auditService)
         {
             _context = context;
+            _auditService = auditService;
         }
 
-        // Lista de productos
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products
@@ -28,7 +28,6 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(products);
         }
 
-        // Detalle de producto
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,20 +45,17 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(product);
         }
 
-        // Formulario de creación
         [Authorize(Roles = "SuperAdmin,Registrador")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // Guardar nuevo producto
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SuperAdmin,Registrador")]
         public async Task<IActionResult> Create(Product product)
         {
-            // Validación extra: código único
             bool codeExists = await _context.Products.AnyAsync(p => p.Code == product.Code);
 
             if (codeExists)
@@ -78,10 +74,14 @@ namespace Proyecto2Seguridad.Web.Controllers
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
+            // Registrar auditoría de creación
+            await RegisterAuditAsync(
+                "PRODUCT_CREATE",
+                $"Se creó el producto {product.Name} con código {product.Code}");
+
             return RedirectToAction(nameof(Index));
         }
 
-        // Formulario de edición
         [Authorize(Roles = "SuperAdmin,Registrador")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -100,7 +100,6 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(product);
         }
 
-        // Guardar edición
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SuperAdmin,Registrador")]
@@ -111,7 +110,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Validación extra: código único excluyendo el mismo registro
             bool codeExists = await _context.Products.AnyAsync(p => p.Code == product.Code && p.Id != product.Id);
 
             if (codeExists)
@@ -141,10 +139,14 @@ namespace Proyecto2Seguridad.Web.Controllers
             _context.Update(existingProduct);
             await _context.SaveChangesAsync();
 
+            // Registrar auditoría de edición
+            await RegisterAuditAsync(
+                "PRODUCT_EDIT",
+                $"Se editó el producto {existingProduct.Name} con código {existingProduct.Code}");
+
             return RedirectToAction(nameof(Index));
         }
 
-        // Confirmación de borrado
         [Authorize(Roles = "SuperAdmin,Registrador")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -163,7 +165,6 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(product);
         }
 
-        // Borrado real
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "SuperAdmin,Registrador")]
@@ -173,11 +174,36 @@ namespace Proyecto2Seguridad.Web.Controllers
 
             if (product != null)
             {
+                var productName = product.Name;
+                var productCode = product.Code;
+
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
+
+                // Registrar auditoría de borrado
+                await RegisterAuditAsync(
+                    "PRODUCT_DELETE",
+                    $"Se eliminó el producto {productName} con código {productCode}");
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        // Método auxiliar para registrar auditoría usando el usuario autenticado
+        private async Task RegisterAuditAsync(string eventType, string description)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier"))?.Value;
+            var userName = User.Identity?.Name ?? "Usuario desconocido";
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "IP no disponible";
+            var route = HttpContext.Request.Path.ToString();
+
+            await _auditService.LogAsync(
+                eventType,
+                description,
+                userId,
+                userName,
+                ipAddress,
+                route);
         }
     }
 }

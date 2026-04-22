@@ -1,0 +1,33 @@
+@model IEnumerable<Proyecto2Seguridad.Web.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "Auditoría";
+}
+
+<h1 class="mb-4">Log de auditoría</h1>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Usuario</th>
+            <th>IP</th>
+            <th>Ruta</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</td>
+                <td>@log.EventType</td>
+                <td>@log.Description</td>
+                <td>@log.UserName</td>
+                <td>@log.IpAddress</td>
+                <td>@log.Route</td>
+            </tr>
+        }
+    </tbody>
+</table>

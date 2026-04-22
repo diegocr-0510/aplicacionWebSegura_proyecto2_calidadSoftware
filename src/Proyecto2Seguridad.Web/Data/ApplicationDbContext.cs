@@ -13,5 +13,8 @@ namespace Proyecto2Seguridad.Web.Data
 
         // Tabla de productos
         public DbSet<Product> Products { get; set; }
+
+        // Tabla de auditoría
+        public DbSet<AuditLog> AuditLogs { get; set; }
     }
 }

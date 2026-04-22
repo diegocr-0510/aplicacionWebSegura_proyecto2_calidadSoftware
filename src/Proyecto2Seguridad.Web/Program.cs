@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Proyecto2Seguridad.Web.Data;
 using Proyecto2Seguridad.Web.Models;
 using Proyecto2Seguridad.Web.Seed;
+using Proyecto2Seguridad.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Auth/AccessDenied";
 });
 
+builder.Services.AddScoped<AuditService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
