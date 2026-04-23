@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Proyecto2Seguridad.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0822a8ded4a1b4ebc335c7bc79d33a56846218e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c81eb4e431d5bee0b7d618723ebd967cf3082524")]
 [assembly: System.Reflection.AssemblyProductAttribute("Proyecto2Seguridad.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Proyecto2Seguridad.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
