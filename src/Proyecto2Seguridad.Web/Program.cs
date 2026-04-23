@@ -8,6 +8,7 @@ using Proyecto2Seguridad.Web.Data;
 using Proyecto2Seguridad.Web.Models;
 using Proyecto2Seguridad.Web.Seed;
 using Proyecto2Seguridad.Web.Services;
+using Proyecto2Seguridad.Web.Middleware;
 
 
 
@@ -143,6 +144,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ForbiddenAuditMiddleware>();
 
 // Swagger
 app.UseSwagger();

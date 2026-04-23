@@ -2,41 +2,40 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto2Seguridad.Web.Models;
+using Proyecto2Seguridad.Web.Services;
 using Proyecto2Seguridad.Web.ViewModels;
 
 namespace Proyecto2Seguridad.Web.Controllers
 {
-    // Solo el SuperAdmin puede administrar usuarios.
+    // Solo el SuperAdmin puede administrar usuarios
     [Authorize(Roles = "SuperAdmin")]
     public class UsersController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly AuditService _auditService;
 
         public UsersController(
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            AuditService auditService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _auditService = auditService;
         }
 
-        // Muestra el listado de usuarios.
+        // Muestra el listado de usuarios
         public async Task<IActionResult> Index()
         {
-            // Obtener todos los usuarios del sistema.
             var users = _userManager.Users.ToList();
-
-            // Lista que vamos a enviar a la vista.
             var userList = new List<UserFormViewModel>();
 
             foreach (var user in users)
             {
-                // Obtener el rol actual del usuario.
                 var roles = await _userManager.GetRolesAsync(user);
                 var currentRole = roles.FirstOrDefault() ?? "Sin rol";
 
-                // Agregar los datos al ViewModel.
                 userList.Add(new UserFormViewModel
                 {
                     Id = user.Id,
@@ -50,11 +49,10 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(userList);
         }
 
-        // Muestra el formulario para crear un usuario.
+        // Muestra el formulario para crear usuario
         [HttpGet]
         public IActionResult Create()
         {
-            // Cargar los roles para mostrarlos en el formulario.
             ViewBag.Roles = _roleManager.Roles
                 .Select(r => r.Name)
                 .Where(r => r != null)
@@ -63,44 +61,38 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View();
         }
 
-        // Guarda un nuevo usuario.
+        // Guarda un nuevo usuario
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserFormViewModel model)
         {
-            // Volver a cargar roles por si hay error de validación.
             ViewBag.Roles = _roleManager.Roles
                 .Select(r => r.Name)
                 .Where(r => r != null)
                 .ToList();
 
-            // Validación extra: la contraseña es obligatoria al crear.
             if (string.IsNullOrWhiteSpace(model.Password))
             {
                 ModelState.AddModelError("Password", "La contraseña es obligatoria.");
             }
 
-            // Validar que el nombre de usuario no exista.
             var existingUserByUserName = await _userManager.FindByNameAsync(model.UserName);
             if (existingUserByUserName != null)
             {
                 ModelState.AddModelError("UserName", "Ya existe un usuario con ese nombre.");
             }
 
-            // Validar que el correo no exista.
             var existingUserByEmail = await _userManager.FindByEmailAsync(model.Email);
             if (existingUserByEmail != null)
             {
                 ModelState.AddModelError("Email", "Ya existe un usuario con ese correo.");
             }
 
-            // Si hay errores, volver a la vista.
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Crear la entidad de usuario.
             var user = new ApplicationUser
             {
                 UserName = model.UserName,
@@ -108,12 +100,10 @@ namespace Proyecto2Seguridad.Web.Controllers
                 EmailConfirmed = true
             };
 
-            // Crear el usuario con la contraseña segura.
             var result = await _userManager.CreateAsync(user, model.Password!);
 
             if (!result.Succeeded)
             {
-                // Si Identity devuelve errores, agregarlos al ModelState.
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -122,13 +112,17 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return View(model);
             }
 
-            // Asignar el rol seleccionado.
             await _userManager.AddToRoleAsync(user, model.Role);
+
+            // Registrar auditoría de creación de usuario
+            await RegisterAuditAsync(
+                "USER_CREATE",
+                $"Se creó el usuario {user.UserName} con rol {model.Role}");
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Muestra el formulario de edición.
+        // Muestra el formulario de edición
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -137,7 +131,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Buscar usuario.
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
@@ -145,17 +138,14 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Obtener rol actual.
             var roles = await _userManager.GetRolesAsync(user);
             var currentRole = roles.FirstOrDefault() ?? string.Empty;
 
-            // Cargar roles para el dropdown.
             ViewBag.Roles = _roleManager.Roles
                 .Select(r => r.Name)
                 .Where(r => r != null)
                 .ToList();
 
-            // Pasar datos al formulario.
             var model = new UserFormViewModel
             {
                 Id = user.Id,
@@ -168,12 +158,11 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(model);
         }
 
-        // Guarda los cambios de un usuario.
+        // Guarda cambios de un usuario
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserFormViewModel model)
         {
-            // Volver a cargar roles por si hay error.
             ViewBag.Roles = _roleManager.Roles
                 .Select(r => r.Name)
                 .Where(r => r != null)
@@ -189,7 +178,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Buscar usuario existente.
             var user = await _userManager.FindByIdAsync(model.Id);
 
             if (user == null)
@@ -197,7 +185,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Validar que no exista otro usuario con el mismo nombre.
             var existingUserByUserName = await _userManager.FindByNameAsync(model.UserName);
             if (existingUserByUserName != null && existingUserByUserName.Id != user.Id)
             {
@@ -205,7 +192,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return View(model);
             }
 
-            // Validar que no exista otro usuario con el mismo correo.
             var existingUserByEmail = await _userManager.FindByEmailAsync(model.Email);
             if (existingUserByEmail != null && existingUserByEmail.Id != user.Id)
             {
@@ -213,11 +199,9 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return View(model);
             }
 
-            // Actualizar datos básicos.
             user.UserName = model.UserName;
             user.Email = model.Email;
 
-            // Guardar cambios del usuario.
             var updateResult = await _userManager.UpdateAsync(user);
 
             if (!updateResult.Succeeded)
@@ -230,10 +214,8 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return View(model);
             }
 
-            // Si se escribió nueva contraseña, actualizarla.
             if (!string.IsNullOrWhiteSpace(model.Password))
             {
-                // Generar token para cambiar contraseña de forma segura.
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var passwordResult = await _userManager.ResetPasswordAsync(user, resetToken, model.Password);
 
@@ -248,15 +230,21 @@ namespace Proyecto2Seguridad.Web.Controllers
                 }
             }
 
-            // Actualizar rol.
             var currentRoles = await _userManager.GetRolesAsync(user);
+            var previousRole = currentRoles.FirstOrDefault() ?? "Sin rol";
+
             await _userManager.RemoveFromRolesAsync(user, currentRoles);
             await _userManager.AddToRoleAsync(user, model.Role);
+
+            // Registrar auditoría de edición de usuario
+            await RegisterAuditAsync(
+                "USER_EDIT",
+                $"Se editó el usuario {user.UserName}. Rol anterior: {previousRole}. Rol nuevo: {model.Role}");
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Muestra confirmación de eliminación.
+        // Muestra confirmación de eliminación
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
@@ -265,7 +253,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Buscar usuario.
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
@@ -273,7 +260,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Obtener rol actual.
             var roles = await _userManager.GetRolesAsync(user);
             var currentRole = roles.FirstOrDefault() ?? "Sin rol";
 
@@ -289,7 +275,7 @@ namespace Proyecto2Seguridad.Web.Controllers
             return View(model);
         }
 
-        // Elimina un usuario del sistema.
+        // Elimina un usuario
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -299,7 +285,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Buscar usuario.
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
@@ -307,7 +292,6 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return NotFound();
             }
 
-            // Evitar que el admin actual se elimine a sí mismo por accidente.
             var currentUserId = _userManager.GetUserId(User);
             if (user.Id == currentUserId)
             {
@@ -315,9 +299,33 @@ namespace Proyecto2Seguridad.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var deletedUserName = user.UserName ?? "Usuario sin nombre";
+
             await _userManager.DeleteAsync(user);
 
+            // Registrar auditoría de eliminación de usuario
+            await RegisterAuditAsync(
+                "USER_DELETE",
+                $"Se eliminó el usuario {deletedUserName}");
+
             return RedirectToAction(nameof(Index));
+        }
+
+        // Método auxiliar para registrar eventos de auditoría
+        private async Task RegisterAuditAsync(string eventType, string description)
+        {
+            var userId = _userManager.GetUserId(User);
+            var userName = User.Identity?.Name ?? "Usuario desconocido";
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "IP no disponible";
+            var route = HttpContext.Request.Path.ToString();
+
+            await _auditService.LogAsync(
+                eventType,
+                description,
+                userId,
+                userName,
+                ipAddress,
+                route);
         }
     }
 }
