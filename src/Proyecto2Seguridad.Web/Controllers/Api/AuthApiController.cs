@@ -13,40 +13,63 @@ namespace Proyecto2Seguridad.Web.Controllers.Api
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtTokenService _jwtTokenService;
         private readonly AuditService _auditService;
+        private readonly LoginRateLimitService _loginRateLimitService;
 
         public AuthApiController(
             UserManager<ApplicationUser> userManager,
             JwtTokenService jwtTokenService,
-            AuditService auditService)
+            AuditService auditService,
+            LoginRateLimitService loginRateLimitService)
         {
             _userManager = userManager;
             _jwtTokenService = jwtTokenService;
             _auditService = auditService;
+            _loginRateLimitService = loginRateLimitService;
         }
 
         // Login de la API para generar JWT
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] ApiLoginRequestDto model)
         {
-            // Obtener IP y ruta de la solicitud
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "IP no disponible";
             var route = HttpContext.Request.Path.ToString();
 
-            // Validar el modelo recibido
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Buscar usuario por correo
+            // Clave de bloqueo basada en correo + IP
+            var rateLimitKey = $"{model.Email}|{ipAddress}|API";
+
+            // Verificar bloqueo
+            if (_loginRateLimitService.IsBlocked(rateLimitKey, out var blockedUntil))
+            {
+                await _auditService.LogAsync(
+                    "API_LOGIN_BLOCKED",
+                    $"Login API bloqueado temporalmente para {model.Email} desde IP {ipAddress} hasta {blockedUntil:yyyy-MM-dd HH:mm:ss} UTC",
+                    null,
+                    model.Email,
+                    ipAddress,
+                    route);
+
+                return Unauthorized(new
+                {
+                    message = "Acceso temporalmente bloqueado por múltiples intentos fallidos. Intenta nuevamente más tarde."
+                });
+            }
+
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
-                // Registrar intento fallido de login API
+                var failureResult = _loginRateLimitService.RegisterFailure(rateLimitKey);
+
                 await _auditService.LogAsync(
-                    "API_LOGIN_FAILED",
-                    $"Intento fallido de login API con correo no encontrado: {model.Email}",
+                    failureResult.blockedNow ? "API_LOGIN_BLOCKED" : "API_LOGIN_FAILED",
+                    failureResult.blockedNow
+                        ? $"Se bloqueó el login API para {model.Email} desde IP {ipAddress} por múltiples intentos fallidos."
+                        : $"Intento fallido de login API con correo no encontrado: {model.Email}",
                     null,
                     model.Email,
                     ipAddress,
@@ -55,15 +78,17 @@ namespace Proyecto2Seguridad.Web.Controllers.Api
                 return Unauthorized(new { message = "Credenciales inválidas." });
             }
 
-            // Validar la contraseña del usuario
             var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
 
             if (!passwordValid)
             {
-                // Registrar intento fallido por contraseña incorrecta
+                var failedAttempt = _loginRateLimitService.RegisterFailure(rateLimitKey);
+
                 await _auditService.LogAsync(
-                    "API_LOGIN_FAILED",
-                    $"Intento fallido de login API para el usuario {user.UserName}",
+                    failedAttempt.blockedNow ? "API_LOGIN_BLOCKED" : "API_LOGIN_FAILED",
+                    failedAttempt.blockedNow
+                        ? $"Se bloqueó el login API para el usuario {user.UserName} desde IP {ipAddress} por múltiples intentos fallidos."
+                        : $"Intento fallido de login API para el usuario {user.UserName}",
                     user.Id,
                     user.UserName,
                     ipAddress,
@@ -72,10 +97,11 @@ namespace Proyecto2Seguridad.Web.Controllers.Api
                 return Unauthorized(new { message = "Credenciales inválidas." });
             }
 
-            // Generar token JWT
+            // Reiniciar contador si el login fue correcto
+            _loginRateLimitService.Reset(rateLimitKey);
+
             var (token, expiration, role) = await _jwtTokenService.GenerateTokenAsync(user);
 
-            // Registrar login API exitoso
             await _auditService.LogAsync(
                 "API_LOGIN_SUCCESS",
                 $"Login API exitoso del usuario {user.UserName}",
@@ -84,7 +110,6 @@ namespace Proyecto2Seguridad.Web.Controllers.Api
                 ipAddress,
                 route);
 
-            // Preparar respuesta
             var response = new ApiLoginResponseDto
             {
                 Token = token,

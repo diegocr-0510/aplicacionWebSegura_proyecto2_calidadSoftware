@@ -200,20 +200,6 @@
 /Users/brandonbadillavega/Desktop/UTN/2026/I Cuatrimestre/Calidad del Software/ProyectoII/Socialhub/aplicacionWebSegura_proyecto2_calidadSoftware/src/Proyecto2Seguridad.Web/obj/Debug/net10.0/Proyecto2Seguridad.Web.pdb
 /Users/brandonbadillavega/Desktop/UTN/2026/I Cuatrimestre/Calidad del Software/ProyectoII/Socialhub/aplicacionWebSegura_proyecto2_calidadSoftware/src/Proyecto2Seguridad.Web/obj/Debug/net10.0/Proyecto2Seguridad.Web.genruntimeconfig.cache
 /Users/brandonbadillavega/Desktop/UTN/2026/I Cuatrimestre/Calidad del Software/ProyectoII/Socialhub/aplicacionWebSegura_proyecto2_calidadSoftware/src/Proyecto2Seguridad.Web/obj/Debug/net10.0/ref/Proyecto2Seguridad.Web.dll
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.csproj.AssemblyReference.cache
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\rpswa.dswa.cache.json
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.AssemblyInfoInputs.cache
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.AssemblyInfo.cs
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.csproj.CoreCompileInputs.cache
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.RazorAssemblyInfo.cache
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.RazorAssemblyInfo.cs
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.sourcelink.json
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.dll
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\refint\Proyecto2Seguridad.Web.dll
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.pdb
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\bin\Debug\net10.0\appsettings.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\bin\Debug\net10.0\Proyecto2Seguridad.Web.staticwebassets.runtime.json
@@ -325,12 +311,24 @@ C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Segurid
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.csproj.AssemblyReference.cache
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.AssemblyInfoInputs.cache
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.AssemblyInfo.cs
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.csproj.CoreCompileInputs.cache
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.RazorAssemblyInfo.cache
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.RazorAssemblyInfo.cs
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.sourcelink.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\scopedcss\bundle\Proyecto2Seguridad.Web.styles.css
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\scopedcss\projectbundle\Proyecto2Seguridad.Web.bundle.scp.css
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\j3xymep22z-{0}-wr5766pk9a-wr5766pk9a.gz
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\3iv3s2db8n-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\9pjjvui9wp-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\q71e3kx7nl-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -392,14 +390,16 @@ C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Segurid
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\i0k1y5dpr3-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\elf4jfbwcu-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\9mm8zx1u9h-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\86dqilowh5-{0}-pyk8f98qpj-pyk8f98qpj.gz
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\ta57hr67ct-{0}-pyk8f98qpj-pyk8f98qpj.gz
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\86dqilowh5-{0}-cipi5kxhkd-cipi5kxhkd.gz
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\ta57hr67ct-{0}-cipi5kxhkd-cipi5kxhkd.gz
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\staticwebassets.development.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\swae.build.ex.cache
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto.DFC35348.Up2Date
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.dll
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\refint\Proyecto2Seguridad.Web.dll
+C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.pdb
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\Proyecto2Seguridad.Web.genruntimeconfig.cache
 C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\ref\Proyecto2Seguridad.Web.dll
-C:\Users\franc\OneDrive\Escritorio\Proyecto2-Seguridad-2026\src\Proyecto2Seguridad.Web\obj\Debug\net10.0\compressed\j3xymep22z-{0}-wr5766pk9a-wr5766pk9a.gz

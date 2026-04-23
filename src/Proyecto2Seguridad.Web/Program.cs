@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using Proyecto2Seguridad.Web.Data;
 using Proyecto2Seguridad.Web.Models;
 using Proyecto2Seguridad.Web.Seed;
 using Proyecto2Seguridad.Web.Services;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,53 +41,100 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Auth/AccessDenied";
 });
 
-// Registrar servicios propios
+// Servicios propios
 builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<JwtTokenService>();
+builder.Services.AddSingleton<LoginRateLimitService>();
 
 // Leer configuración JWT desde appsettings.json
 var jwtKey = builder.Configuration["JwtSettings:Key"]!;
 var jwtIssuer = builder.Configuration["JwtSettings:Issuer"]!;
 var jwtAudience = builder.Configuration["JwtSettings:Audience"]!;
 
-// Configuración de autenticación JWT para la API
+// Configuración JWT para la API
 builder.Services.AddAuthentication()
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // Validar emisor
             ValidateIssuer = true,
             ValidIssuer = jwtIssuer,
 
-            // Validar audiencia
             ValidateAudience = true,
             ValidAudience = jwtAudience,
 
-            // Validar expiración
             ValidateLifetime = true,
 
-            // Validar firma
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
 
-            // No dejar margen extra de tiempo
             ClockSkew = TimeSpan.Zero
         };
     });
 
-// Registrar MVC y controladores API
+// MVC y API
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
+// Swagger / OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Información básica del documento Swagger
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "NovaTech Store API",
+        Version = "v1",
+        Description = "API REST segura para gestión de productos y usuarios"
+    });
+
+    // Configuración de autenticación Bearer para JWT
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Ingrese el token JWT así: Bearer {token}",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+});
+
 var app = builder.Build();
 
-// Configuración del pipeline HTTP
+// Pipeline HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+// Headers de seguridad
+app.Use(async (context, next) =>
+{
+    // Política CSP básica para reducir XSS
+    context.Response.Headers["Content-Security-Policy"] =
+        "default-src 'self'; " +
+        "script-src 'self'; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data:; " +
+        "font-src 'self'; " +
+        "object-src 'none'; " +
+        "frame-ancestors 'none'; " +
+        "base-uri 'self'; " +
+        "form-action 'self'";
+
+    // Evita clickjacking
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+
+    // Evita MIME sniffing
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+
+    // Controla la información de referencia
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -93,6 +143,14 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Swagger
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "NovaTech Store API v1");
+    options.RoutePrefix = "swagger";
+});
 
 // Rutas MVC
 app.MapControllerRoute(

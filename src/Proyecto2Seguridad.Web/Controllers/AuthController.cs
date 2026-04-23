@@ -12,15 +12,18 @@ namespace Proyecto2Seguridad.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AuditService _auditService;
+        private readonly LoginRateLimitService _loginRateLimitService;
 
         public AuthController(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            AuditService auditService)
+            AuditService auditService,
+            LoginRateLimitService loginRateLimitService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _auditService = auditService;
+            _loginRateLimitService = loginRateLimitService;
         }
 
         [AllowAnonymous]
@@ -35,12 +38,29 @@ namespace Proyecto2Seguridad.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            // Obtener IP y ruta actual
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "IP no disponible";
-            var route = HttpContext.Request.Path;
+            var route = HttpContext.Request.Path.ToString();
 
             if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            // La clave de bloqueo usará correo + IP para hacer el control más estricto
+            var rateLimitKey = $"{model.Email}|{ipAddress}";
+
+            // Verificar si ya está bloqueado
+            if (_loginRateLimitService.IsBlocked(rateLimitKey, out var blockedUntil))
+            {
+                await _auditService.LogAsync(
+                    "LOGIN_BLOCKED",
+                    $"Login web bloqueado temporalmente para {model.Email} desde IP {ipAddress} hasta {blockedUntil:yyyy-MM-dd HH:mm:ss} UTC",
+                    null,
+                    model.Email,
+                    ipAddress,
+                    route);
+
+                ModelState.AddModelError(string.Empty, "Acceso temporalmente bloqueado por múltiples intentos fallidos. Intenta nuevamente más tarde.");
                 return View(model);
             }
 
@@ -48,14 +68,17 @@ namespace Proyecto2Seguridad.Web.Controllers
 
             if (user == null)
             {
-                // Registrar intento fallido con correo no encontrado
+                var failureResult = _loginRateLimitService.RegisterFailure(rateLimitKey);
+
                 await _auditService.LogAsync(
-                    "LOGIN_FAILED",
-                    $"Intento de login fallido con correo no encontrado: {model.Email}",
+                    failureResult.blockedNow ? "LOGIN_BLOCKED" : "LOGIN_FAILED",
+                    failureResult.blockedNow
+                        ? $"Se bloqueó el login web para {model.Email} desde IP {ipAddress} por múltiples intentos fallidos."
+                        : $"Intento de login web fallido con correo no encontrado: {model.Email}",
                     null,
                     model.Email,
                     ipAddress,
-                    route!);
+                    route);
 
                 ModelState.AddModelError(string.Empty, "Credenciales inválidas.");
                 return View(model);
@@ -69,30 +92,34 @@ namespace Proyecto2Seguridad.Web.Controllers
 
             if (result.Succeeded)
             {
-                // Actualizar último login
+                // Reiniciar contador de fallos al iniciar correctamente
+                _loginRateLimitService.Reset(rateLimitKey);
+
                 user.LastLoginAt = DateTime.UtcNow;
                 await _userManager.UpdateAsync(user);
 
-                // Registrar login exitoso
                 await _auditService.LogAsync(
                     "LOGIN_SUCCESS",
                     $"Inicio de sesión exitoso del usuario {user.UserName}",
                     user.Id,
                     user.UserName,
                     ipAddress,
-                    route!);
+                    route);
 
                 return RedirectToAction("Index", "Home");
             }
 
-            // Registrar login fallido por contraseña incorrecta
+            var failedAttempt = _loginRateLimitService.RegisterFailure(rateLimitKey);
+
             await _auditService.LogAsync(
-                "LOGIN_FAILED",
-                $"Intento de login fallido para el usuario {user.UserName}",
+                failedAttempt.blockedNow ? "LOGIN_BLOCKED" : "LOGIN_FAILED",
+                failedAttempt.blockedNow
+                    ? $"Se bloqueó el login web para el usuario {user.UserName} desde IP {ipAddress} por múltiples intentos fallidos."
+                    : $"Intento de login web fallido para el usuario {user.UserName}",
                 user.Id,
                 user.UserName,
                 ipAddress,
-                route!);
+                route);
 
             ModelState.AddModelError(string.Empty, "Credenciales inválidas.");
             return View(model);
