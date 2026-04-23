@@ -14,9 +14,14 @@ using Proyecto2Seguridad.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de conexión a PostgreSQL
+// Obtener cadena de conexión desde variable de entorno si existe.
+// Si no existe, usar la del appsettings.json.
+var connectionString =
+    Environment.GetEnvironmentVariable("CONNECTION_STRING") ??
+    builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 // Configuración de Identity para usuarios y roles
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -102,6 +107,16 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+// Aplicar migraciones automáticamente al iniciar la aplicación
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    // Crear la base de datos y aplicar migraciones
+    context.Database.Migrate();
+}
 
 // Pipeline HTTP
 if (!app.Environment.IsDevelopment())

@@ -1,0 +1,17 @@
+# Archivos compilados
+bin/
+obj/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+
+# Archivos de usuario
+*.user
+*.suo
+
+# Config local
+appsettings.Development.json
+
+# Logs y temporales
+*.log

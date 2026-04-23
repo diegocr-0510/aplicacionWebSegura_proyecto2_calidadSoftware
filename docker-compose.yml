@@ -1,0 +1,30 @@
+
+services:
+  novatech-db:
+    image: postgres:17
+    container_name: novatech-db
+    environment:
+      POSTGRES_DB: proyecto2seguridad
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5433:5432"
+    volumes:
+      - novatech-db-data:/var/lib/postgresql/data
+
+  novatech-app:
+    build:
+      context: ./src/Proyecto2Seguridad.Web
+      dockerfile: Dockerfile
+    container_name: novatech-app
+    depends_on:
+      - novatech-db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      CONNECTION_STRING: Host=novatech-db;Port=5432;Database=proyecto2seguridad;Username=postgres;Password=postgres123
+    ports:
+      - "8080:8080"
+
+volumes:
+  novatech-db-data:
