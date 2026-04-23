@@ -1,7 +1,6 @@
 html {
   font-size: 14px;
-  position: relative;
-  min-height: 100%;
+  height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -11,10 +10,23 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  height: 100%;
+  margin: 0;
   background: linear-gradient(180deg, #f4f7fb 0%, #eef2f7 100%);
   color: #1f2937;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estructura para mantener el footer al fondo */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hace que el contenido principal ocupe el espacio disponible */
+.main-content {
+  flex: 1;
 }
 
 /* Navbar principal */
@@ -22,7 +34,7 @@ body {
   background: linear-gradient(90deg, #0f172a 0%, #1d4ed8 100%);
 }
 
-/* Efecto hover de enlaces del navbar */
+/* Hover de enlaces del navbar */
 .navbar-dark .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.9);
   transition: all 0.2s ease-in-out;
@@ -72,6 +84,7 @@ body {
 /* Footer */
 .footer {
   background-color: #ffffff;
+  margin-top: auto;
 }
 
 /* Botones */
@@ -85,7 +98,7 @@ body {
   border-color: #1d4ed8;
 }
 
-/* Inputs con mejor apariencia */
+/* Inputs */
 .form-control,
 .form-select,
 textarea {

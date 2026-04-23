@@ -5,108 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - NovaTech Store</title>
 
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-    <!-- Estilos generados por ASP.NET -->
     <link rel="stylesheet" href="~/Proyecto2Seguridad.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <!-- Barra de navegación principal -->
-        <nav class="navbar navbar-expand-lg navbar-dark novatech-navbar shadow-sm">
-            <div class="container-fluid">
-                <!-- Nombre de la aplicación -->
-                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-                    NovaTech Store
-                </a>
+    <!-- Contenedor principal para mantener el footer abajo -->
+    <div class="page-wrapper">
+        <header>
+            <!-- Barra de navegación principal -->
+            <nav class="navbar navbar-expand-lg navbar-dark novatech-navbar shadow-sm">
+                <div class="container-fluid">
+                    <!-- Nombre de la aplicación -->
+                    <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                        NovaTech Store
+                    </a>
 
-                <!-- Botón para menú responsive -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Mostrar navegación">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <!-- Botón para menú responsive -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                            aria-controls="mainNavbar" aria-expanded="false" aria-label="Mostrar navegación">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <!-- Contenido del navbar -->
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <!-- Menú izquierdo -->
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
+                    <!-- Contenido del navbar -->
+                    <div class="collapse navbar-collapse" id="mainNavbar">
+                        <!-- Menú izquierdo -->
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            @if (User.Identity != null && User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
+                                </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Products" asp-action="Index">Productos</a>
-                        </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Products" asp-action="Index">Productos</a>
+                                </li>
 
-                        @if (User.IsInRole("SuperAdmin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Users" asp-action="Index">Usuarios</a>
-                            </li>
+                                @if (User.IsInRole("SuperAdmin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Users" asp-action="Index">Usuarios</a>
+                                    </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="AuditLogs" asp-action="Index">Auditoría</a>
-                            </li>
-                        }
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="AuditLogs" asp-action="Index">Auditoría</a>
+                                    </li>
+                                }
 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Información</a>
-                        </li>
-                    }
-                </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Home" asp-action="Privacy">Información</a>
+                                </li>
+                            }
+                        </ul>
 
-                    <!-- Menú derecho -->
-                    <ul class="navbar-nav ms-auto">
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item d-flex align-items-center me-3">
-                                <span class="nav-link text-white">
-                                    Hola, @User.Identity.Name
-                                </span>
-                            </li>
+                        <!-- Menú derecho -->
+                        <ul class="navbar-nav ms-auto">
+                            @if (User.Identity != null && User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item d-flex align-items-center me-3">
+                                    <span class="nav-link text-white">
+                                        Hola, @User.Identity.Name
+                                    </span>
+                                </li>
 
-                            <li class="nav-item d-flex align-items-center">
-                                <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-outline-light btn-sm">
-                                        Cerrar sesión
-                                    </button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Iniciar sesión</a>
-                            </li>
-                        }
-                    </ul>
+                                <li class="nav-item d-flex align-items-center">
+                                    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-light btn-sm">
+                                            Cerrar sesión
+                                        </button>
+                                    </form>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Auth" asp-action="Login">Iniciar sesión</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
 
-    <!-- Contenedor principal -->
-    <div class="container py-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
+        <!-- Contenido principal que crece y empuja el footer abajo -->
+        <main class="main-content">
+            <div class="container py-4">
+                @RenderBody()
+            </div>
         </main>
+
+        <!-- Pie de página -->
+        <footer class="footer text-muted bg-white border-top">
+            <div class="container py-3">
+                &copy; 2026 - NovaTech Store - Catálogo de productos informáticos
+            </div>
+        </footer>
     </div>
 
-    <!-- Pie de página -->
-    <footer class="border-top footer text-muted bg-white">
-        <div class="container py-3">
-            &copy; 2026 - NovaTech Store - Catálogo de productos informáticos
-        </div>
-    </footer>
-
-    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
