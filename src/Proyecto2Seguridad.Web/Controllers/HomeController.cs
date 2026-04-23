@@ -1,24 +1,39 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto2Seguridad.Web.Models;
+using System.Diagnostics;
 
-namespace Proyecto2Seguridad.Web.Controllers;
-
-public class HomeController : Controller
+namespace Proyecto2Seguridad.Web.Controllers
 {
-    public IActionResult Index()
+    
+    /// Controlador principal protegido con autenticación.
+    
+    [Authorize]
+    public class HomeController : Controller
     {
-        return View();
-    }
+        
+        /// Página principal del sistema.
+        
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        
+        /// Página de privacidad.
+        
+        public IActionResult Privacy()
+        {
+            return View();
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        
+        /// Página de error.
+        
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }
