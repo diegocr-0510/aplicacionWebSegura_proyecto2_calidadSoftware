@@ -63,7 +63,7 @@ dotnet run
 ## 🔑 Usuario de prueba
 
 Usuario: admin
-Contraseña: Admin123*S
+Contraseña: Admin123*
 
 ---
 
