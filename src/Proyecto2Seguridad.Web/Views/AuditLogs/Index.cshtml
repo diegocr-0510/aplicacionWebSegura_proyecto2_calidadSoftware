@@ -20,8 +20,11 @@
     <tbody>
         @foreach (var log in Model)
         {
+            var costaRicaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            var fechaCostaRica = TimeZoneInfo.ConvertTimeFromUtc(log.CreatedAt, costaRicaTimeZone);
+
             <tr>
-                <td>@log.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</td>
+                <td>@fechaCostaRica.ToString("dd/MM/yyyy HH:mm:ss")</td>
                 <td>@log.EventType</td>
                 <td>@log.Description</td>
                 <td>@log.UserName</td>

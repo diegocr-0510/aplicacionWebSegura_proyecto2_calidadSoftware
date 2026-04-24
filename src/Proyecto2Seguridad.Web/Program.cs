@@ -12,6 +12,7 @@ using Proyecto2Seguridad.Web.Middleware;
 
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Obtener cadena de conexión desde variable de entorno si existe.
