@@ -38,7 +38,10 @@
                 <td>
                     @if (user.LastLoginAt.HasValue)
                     {
-                        @user.LastLoginAt.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                        var costaRicaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+                        var fechaCostaRica = TimeZoneInfo.ConvertTimeFromUtc(user.LastLoginAt.Value, costaRicaTimeZone);
+
+                        @fechaCostaRica.ToString("dd/MM/yyyy HH:mm:ss")
                     }
                     else
                     {
